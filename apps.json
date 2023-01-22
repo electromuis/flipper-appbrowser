@@ -1,0 +1,198 @@
+[
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/1471116?v=4",
+        "description": "Flipper Zero Password Generator",
+        "id": 569876270,
+        "repo": "flipper_passgen",
+        "user": "anakod"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/1175537?v=4",
+        "description": "Flipper Zero Hello World",
+        "id": 565861076,
+        "repo": "hello_world",
+        "user": "ASoldo"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/961065?v=4",
+        "description": "Flipper Zero port of Chrome's running T-rex game",
+        "id": 548362304,
+        "repo": "t-rex-runner",
+        "user": "gelin"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/108376490?v=4",
+        "description": "Generic Flipper Zero app template for Aquarium's build system.",
+        "id": 542833465,
+        "repo": "app-template",
+        "user": "flipper-aquarium"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/5065094?v=4",
+        "description": null,
+        "id": 540116479,
+        "repo": "flipperzero-text-reader",
+        "user": "kowalski7cc"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/4784169?v=4",
+        "description": "Flipper Zero USB MIDI driver",
+        "id": 562459262,
+        "repo": "flipper-zero-usb-midi",
+        "user": "DrZlo13"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/115046513?v=4",
+        "description": "Tic Tac Toe for the Flipper",
+        "id": 582641081,
+        "repo": "Flipper-Tic-Tac-Toe",
+        "user": "schaene"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/21026383?v=4",
+        "description": "Allows CLI control from GUI, giving untethered access to sub-ghz chat, system diagnostics, and more.",
+        "id": 582532619,
+        "repo": "flipperzero-cli-bridge",
+        "user": "ranchordo"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/18188892?v=4",
+        "description": "BPM Tapper for the Flipper Zero",
+        "id": 537905202,
+        "repo": "bpm-tapper",
+        "user": "panki27"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/4784169?v=4",
+        "description": "Flipper Zero as SWD\\JTAG debugger",
+        "id": 546438784,
+        "repo": "flipper_zero_dap_link",
+        "user": "DrZlo13"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/34006234?v=4",
+        "description": "Basic GUI Hello World application for Flipper Zero",
+        "id": 540698220,
+        "repo": "flipper_helloworld",
+        "user": "mervburger"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/2084795?v=4",
+        "description": "zigfrid implementation on flipper zero",
+        "id": 524746361,
+        "repo": "FlipFrid",
+        "user": "Ganapati"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/62661743?v=4",
+        "description": null,
+        "id": 587784885,
+        "repo": "subbrute",
+        "user": "ankris812"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/6872032?v=4",
+        "description": null,
+        "id": 585062762,
+        "repo": "flipper-wav-recorder",
+        "user": "scrolltex"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/13513421?v=4",
+        "description": "A Flipper Zero application to interface with SCD30 carbon dioxide sensors.",
+        "id": 590756473,
+        "repo": "flipperzero-scd30",
+        "user": "heimskr"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/13513421?v=4",
+        "description": "A Flipper Zero application to interface with BME680 sensors.",
+        "id": 590250573,
+        "repo": "flipperzero-bme680",
+        "user": "heimskr"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/48254001?v=4",
+        "description": null,
+        "id": 588976603,
+        "repo": "flipperzero-flappybird",
+        "user": "DroomOne"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/48254001?v=4",
+        "description": "Get started with Flipper Zero by building a Custom \"Hello world\" plugin",
+        "id": 473344547,
+        "repo": "Flipper-Plugin-Tutorial",
+        "user": "DroomOne"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/6551216?v=4",
+        "description": "An iambic key for the Flipper Zero.",
+        "id": 587443289,
+        "repo": "flipper-morse-iambic-key",
+        "user": "lilopkins"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/6551216?v=4",
+        "description": "Flipper Hello World Starter Project",
+        "id": 586974026,
+        "repo": "flipper-starter-project",
+        "user": "lilopkins"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/14098502?v=4",
+        "description": "Extend SubGHz Range",
+        "id": 585898735,
+        "repo": "flipperzero-extend-range",
+        "user": "maede97"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/54897385?v=4",
+        "description": "Game prototype and interface for flipper zero. Based on tamagotchi.",
+        "id": 581795761,
+        "repo": "KodPetFlipper",
+        "user": "KodamaDeveloper"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/66154?v=4",
+        "description": "Test app",
+        "id": 583943987,
+        "repo": "flipper-zero-tests",
+        "user": "Shmuma"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/1268517?v=4",
+        "description": null,
+        "id": 583548653,
+        "repo": "flipperzero-app-onewire",
+        "user": "niki-timofe"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/1325864?v=4",
+        "description": "Pomodoro timer app for flipperzero",
+        "id": 551629841,
+        "repo": "flipperzero_pomodoro",
+        "user": "sbrin"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/12435297?v=4",
+        "description": "Flipper Zero BT Serial App Example",
+        "id": 583173605,
+        "repo": "fbs",
+        "user": "maybe-hello-world"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/13496536?v=4",
+        "description": null,
+        "id": 579767321,
+        "repo": "flipper-zero-space-impact",
+        "user": "Ka3u6y6a"
+    },
+    {
+        "avatar": "https://avatars.githubusercontent.com/u/44801988?v=4",
+        "description": "2048 Game for Flipper Zero",
+        "id": 580931964,
+        "repo": "flipper-zero-2048-game",
+        "user": "eugene-kirzhanov"
+    }
+]
