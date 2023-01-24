@@ -87,7 +87,7 @@ def build_app(git_user, git_repo):
         if len(files) != 1:
             return jsonify(["building fap failed"]), 400
         
-        # app.downloads = app.downloads + 1
+        app.downloads = app.downloads + 1
         mydb.session.commit()
 
         return send_file(tmpdirname + "/" + files[0])
