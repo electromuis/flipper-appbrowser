@@ -63,6 +63,7 @@
         :per-page="perPage"
       ></b-pagination>
 
+    <a href="https://github.com/electromuis/flipper-appbrowser" target="_blank"><h2>https://github.com/electromuis/flipper-appbrowser</h2></a>
   </div>
 </template>
 
