@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  app:
+    build: .
+    environment:
+      DB_URL: postgresql://postgres:postgres@db/flipper-apps
+      PORT: 8080
+      GIT_TOKEN: ''
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+    links:
+      - "db"
+    ports:
+      - 8080:8080
+  db:
+    image: postgres:latest
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: flipper-apps
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on: [db]
+    ports: [8004:80]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: password

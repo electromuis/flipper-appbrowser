@@ -1,5 +1,7 @@
 # flipper-appbrowser
 
+Available at: https://flipper-apps.electromuis.nl/
+
 This application is an app browser for flipper-zero apps. It uses github by searching all repositories with an "application.fam" file. The backend uses python + flask and the frontend vue + bootstrap
 
 When downloading an application the backend will:
@@ -11,7 +13,7 @@ This is still a first concept, please do send pull requests with improvements!
 
 ## Running the project with docker
 ```
-docker build -t flipper-appbrowser . && docker run --rm flipper-appbrowser -it
+docker-compose up
 ```
 
 
