@@ -67,5 +67,9 @@ def build_app(git_user, git_repo):
         return build_app(title=git_repo, author=git_user)
 
 init_app_db(api)
+<<<<<<< HEAD:backend/app.py
+=======
+
+>>>>>>> db_init:backend/index.py
 if __name__ == '__main__':
     api.run(port=os.getenv('PORT', 80), host='0.0.0.0', debug=True)

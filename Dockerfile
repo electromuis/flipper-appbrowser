@@ -16,7 +16,7 @@ RUN pip install -r requirements.txt
 # Install frontend
 ADD frontend /app/frontend
 WORKDIR /app/frontend
-RUN npm i
+RUN NODE_ENV=development npm i
 
 WORKDIR /app
-ENTRYPOINT [ "concurrently", "cd /app/backend && nodemon index.py", "cd /app/frontend && npm run watch" ]
+ENTRYPOINT [ "concurrently", "cd /app/backend && nodemon app.py", "cd /app/frontend && npm run watch" ]

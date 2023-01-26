@@ -119,12 +119,8 @@ def init_app_db(app):
     log.debug('Init DB (1)')
     mydb.init_app(app)
 
-
     # with app.app_context():
     #     mydb.create_all()
-    log.debug('Init DB (2)')
 
     migrate = Migrate(app, mydb, compare_type=True)
     migrate.init_app(app, mydb)
-
-    log.debug('Init DB (3)')

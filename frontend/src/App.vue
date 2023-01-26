@@ -52,6 +52,8 @@
             Download
           </b-button>
 
+          <InstallButton style="margin: 10px" :app="data.item" />
+
           <b-button v-if="data.item.readme" @click="modal = data.item.readme; modalOpen = true;" style="margin: 10px">Readme</b-button>
         </div>
       </template>
@@ -69,11 +71,13 @@
 
 <script>
 import VueMarkdown from 'vue-markdown-render'
+import InstallButton from './InstallButton.vue'
 
 export default {
   name: 'App',
   components: {
-    VueMarkdown
+    VueMarkdown,
+    InstallButton
   },
 
   methods: {
@@ -94,7 +98,12 @@ export default {
   },
   data() {
     return {
-      items: [],
+      items: [
+        {
+          title: 'Flipper-Plugin-Tutorial',
+          author: 'electromuis'
+        }
+      ],
       fields: [
         {
           key: 'title',
@@ -102,6 +111,9 @@ export default {
         },
         {
           key: 'description',
+        },
+        {
+          key: 'category'
         },
         {
           key: 'stars',
