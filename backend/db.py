@@ -1,38 +1,72 @@
-import os
+import os, logging
 
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, MetaData, Text, DateTime
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, MetaData, Text, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.sql import func
 
-from github import read_app_fam, read_repo_info, read_readme
-
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+from github import read_app_fam, read_repo_info, read_readme, get_last_commit
+
+log = logging.getLogger(__name__)
+
 mydb = SQLAlchemy()
 
-def get_or_create(model, **kwargs):
-    instance = session.query(model).filter_by(**kwargs).first()
-    if instance:
-        return instance
-    else:
-        instance = model(**kwargs)
-        session.add(instance)
-        session.commit()
-        return instance
+class BuildTask(mydb.Model):
+    __tablename__ = 'build_tasks'
+
+    ID=Column(Integer(), primary_key=True)
+    created_at=Column(DateTime(), nullable=False, server_default=func.now())
+
+    app_title=Column(String(32))
+    app_author=Column(String(32))
+
+    git_hash=Column(String(64))
+    success=Column(Boolean())
+    output=Column(Text())
+
+
+class SearchRequest(mydb.Model):
+    __tablename__ = 'requests_search'
+    
+    ID=Column(Integer(), primary_key=True)
+    created_at=Column(DateTime(), nullable=False, server_default=func.now())
+
+    query=Column(String(100), nullable=False)
+    page=Column(Integer(), nullable=False)
+
+    response_total=Column(Integer())
+    num_items=Column(Integer())
+    response=Column(MutableDict.as_mutable(JSONB))
+
+    def get_response_total(self):
+        if "total_count" in self.response:
+            return int(self.response["total_count"])
+        else:
+            return None
+    
+    def get_items(self):
+        if "items" in self.response:
+            return self.response["items"]
+        else:
+            return []
 
 class App(mydb.Model):
     __tablename__ = 'apps'
-    title=Column(String(32), primary_key=True)
-    author=Column(String(32), primary_key=True)
+    title=Column(String(64), primary_key=True)
+    author=Column(String(64), primary_key=True)
     
-    category=Column(String(32))
+    category=Column(String(64))
     stars=Column(Integer())
     readme=Column(Text())
 
-    downloads=Column(Integer(), nullable=False, )
-    created_at=Column(DateTime())
+    last_commit=Column(String(64))
+    downloads=Column(Integer(), nullable=False)
+    created_at=Column(DateTime(), nullable=False, server_default=func.now())
     updated_at=Column(DateTime())
 
     search_json=Column(MutableDict.as_mutable(JSONB))
@@ -42,13 +76,13 @@ class App(mydb.Model):
     def __init__(self, title, author):
         self.title = title
         self.author = author
-        self.created_at=func.now()
         self.downloads = 0
 
     def update_data(self):
         self.repo_json = read_repo_info(self)
         self.fam_json = read_app_fam(self)
         self.readme = read_readme(self)
+        self.last_commit = get_last_commit(self)
 
         self.category = self.fam_json.get('fap_category')
         self.stars = self.repo_json.get('stargazers_count')
@@ -80,10 +114,17 @@ class App(mydb.Model):
             'icon': icon
         }
 
-
 # meta.create_all(engine)
 def init_app_db(app):
+    log.debug('Init DB (1)')
     mydb.init_app(app)
 
-    with app.app_context():
-        mydb.create_all()
+
+    # with app.app_context():
+    #     mydb.create_all()
+    log.debug('Init DB (2)')
+
+    migrate = Migrate(app, mydb, compare_type=True)
+    migrate.init_app(app, mydb)
+
+    log.debug('Init DB (3)')

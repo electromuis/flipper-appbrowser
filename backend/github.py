@@ -1,13 +1,15 @@
 from octokit import Octokit
-import urllib, logging, sys, json, base64, re, os
+import urllib, logging, sys, json, base64, re, os, time
 
 log = logging.getLogger(__name__)
 
-git_token = os.getenv('GIT_TOKEN')
+git_token = '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'
+if git_token:
+    git_client = Octokit(auth='token', token=git_token)
+else:
+    git_client = Octokit()
 
 def find_apps():
-    git_client = Octokit(auth='token', token=git_token)
-    
     ret = []
     page = 1
 
@@ -27,6 +29,8 @@ def find_apps():
         
         for v in found['items']:
             ret.append(v)
+        
+        time.sleep(61)
 
     return ret
 
@@ -40,18 +44,20 @@ def read_app_file(app, file):
     return data
 
 def read_app_fam(app):
-    data = read_app_file(app, 'application.fam')
+    try:
+        data = read_app_file(app, 'application.fam')
 
-    m = re.findall("([\w_]+)=([^,]+),?$", data, re.MULTILINE)
-    meta = {}
-    for k, v in m:
-        meta[k] = v.strip('"')
+        m = re.findall("([\w_]+)=([^,]+),?\)?$", data, re.MULTILINE)
+        meta = {}
+        for k, v in m:
+            meta[k] = v.strip('"')
 
-    log.debug(meta)
-    return meta
+        log.debug(meta)
+        return meta
+    except:
+        return {}
 
 def read_repo_info(app):
-    git_client = Octokit(auth='token', token=git_token)
     data = git_client.repos.get(
         owner=app.search_json['repository']['owner']['login'],
         repo=app.search_json['repository']['name']
@@ -68,3 +74,16 @@ def read_readme(app):
             return read_app_file(app, 'README')
         except:
             return None
+
+def get_last_commit(app):
+    log.debug(dir(git_client.repos))
+
+    data = git_client.repos.list_commits(
+        owner=app.author,
+        repo=app.title
+    ).json
+
+    if len(data) > 0:
+        return data[0]['sha']
+    else:
+        return None
