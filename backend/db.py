@@ -10,6 +10,7 @@ from sqlalchemy.sql import func
 from github import read_app_fam, read_repo_info, read_readme
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 mydb = SQLAlchemy()
 
 def get_or_create(model, **kwargs):
@@ -85,5 +86,8 @@ class App(mydb.Model):
 def init_app_db(app):
     mydb.init_app(app)
 
-    with app.app_context():
-        mydb.create_all()
+    # with app.app_context():
+    #     mydb.create_all()
+
+    migrate = Migrate(app, mydb, compare_type=True)
+    migrate.init_app(app, mydb)

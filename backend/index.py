@@ -92,6 +92,7 @@ def build_app(git_user, git_repo):
 
         return send_file(tmpdirname + "/" + files[0])
 
+init_app_db(api)
+
 if __name__ == '__main__':
-    init_app_db(api)
     api.run(port=os.getenv('PORT', 80), host='0.0.0.0', debug=True)

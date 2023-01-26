@@ -3,3 +3,4 @@ octokitpy
 sqlalchemy
 psycopg2
 Flask-SQLAlchemy
+Flask-Migrate
