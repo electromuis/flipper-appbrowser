@@ -12,6 +12,8 @@
     "@octokit/rest": "^19.0.7",
     "bootstrap-vue-next": "^0.6.2",
     "core-js": "^3.8.3",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "nanoevents": "^7.0.1",
     "pako": "^2.1.0",
     "protobufjs": "^7.2.0",

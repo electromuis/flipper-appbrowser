@@ -6,11 +6,14 @@
 
     <h1 style="margin-bottom: 30px;">Flipper App Browser</h1>
 
+    <b-form-input v-model="searchQuery" placeholder="Search ..." class="mb-4"></b-form-input>
+
     <b-pagination
         v-model="currentPage"
         :total-rows="numApps"
         :per-page="perPage"
       ></b-pagination>
+    
     <b-table
       style="width: 100%"
       :provider="appsLoader"
@@ -18,7 +21,9 @@
       :sort-by="sortBy"
       :sort-desc="sortDesc"
       :fields="fields"
+      :filter="searchQueryCooldown"
       @sorted="setSort"
+      ref="mytable"
 
       hover caption-top responsive striped>
 
@@ -72,6 +77,7 @@
 <script>
 import VueMarkdown from 'vue-markdown-render'
 import InstallButton from './InstallButton.vue'
+import _ from 'lodash'
 
 export default {
   name: 'App',
@@ -80,16 +86,24 @@ export default {
     InstallButton
   },
 
+  created() {
+    const me = this
+    me.$watch('searchQuery', _.debounce(() => {
+        me.searchQueryCooldown = me.searchQuery
+    }, 200))
+  },
+
   methods: {
     async appsLoader(ctx) {
-      const response = await fetch(`/apps.json?page=${ctx.currentPage}&per_page=${this.perPage}&sort_by=${this.sortBy}`)
+      console.log(ctx)
+      const response = await fetch(`/apps.json?page=${ctx.currentPage}&per_page=${this.perPage}&sort_by=${this.sortBy}&sort_dir=${this.sortDesc}&query=${this.searchQueryCooldown}`)
       const responseJson = await response.json()
       this.numApps = responseJson.total
       return responseJson.items
     },
     setSort(e) {
       if(e == this.sortBy) {
-        // this.sortDesc = !this.sortDesc
+        this.sortDesc = !this.sortDesc
       } else {
         this.sortDesc = false
         this.sortBy = e
@@ -98,6 +112,8 @@ export default {
   },
   data() {
     return {
+      searchQuery: '',
+      searchQueryCooldown: '',
       items: [
         {
           title: 'Flipper-Plugin-Tutorial',

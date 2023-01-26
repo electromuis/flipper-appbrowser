@@ -3,7 +3,7 @@ import urllib, logging, sys, json, base64, re, os, time
 
 log = logging.getLogger(__name__)
 
-git_token = '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'
+git_token = os.getenv('GIT_TOKEN')
 if git_token:
     git_client = Octokit(auth='token', token=git_token)
 else:

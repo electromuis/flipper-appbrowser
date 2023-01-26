@@ -19,4 +19,4 @@ WORKDIR /app/frontend
 RUN NODE_ENV=development npm i
 
 WORKDIR /app
-ENTRYPOINT [ "concurrently", "cd /app/backend && nodemon app.py", "cd /app/frontend && npm run watch" ]
+ENTRYPOINT [ "concurrently", "cd /app/backend && flask db upgrade && nodemon app.py", "cd /app/frontend && npm run watch" ]
