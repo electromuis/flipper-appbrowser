@@ -157,7 +157,7 @@ class App(mydb.Model):
         }
 
 
-make_searchable(mydb.Model.metadata)
+# make_searchable(mydb.Model.metadata)
 
 # meta.create_all(engine)
 def init_app_db(app):

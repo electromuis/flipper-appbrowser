@@ -1,14 +1,16 @@
-FROM nikolaik/python-nodejs:latest
+FROM nikolaik/python-nodejs:python3.11-nodejs18-bullseye
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 
 # Install nodejs cli utils
 RUN npm install -g nodemon concurrently
 
 # Install ufbt
-RUN apt update && apt install git cron
+RUN apt update && apt install git cron -y
 RUN git clone https://github.com/flipperdevices/flipperzero-ufbt /opt/ufbt
 RUN /opt/ufbt/ufbt update
-578 20
-/Cron task to search apps-\RUN crontab -l | { cat; echo "*/2 * * * * python /app/backend/search.py"; } | crontab -
+
+# Cron task to search apps
+RUN crontab -l | { cat; echo "*/2 * * * * python /app/backend/search.py"; } | crontab -
 
 # Install backend
 ADD backend /app/backend
