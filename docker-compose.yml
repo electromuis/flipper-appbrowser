@@ -27,6 +27,8 @@ services:
     image: dpage/pgadmin4
     depends_on: [db]
     ports: [8004:80]
+    logging:
+      driver: none
     volumes:
       - ./docker/postgres.json:/pgadmin4/servers.json
       - ./docker/pgpass:/pgpass

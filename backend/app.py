@@ -25,19 +25,28 @@ def hello():
 def apps_get():
     args = request.args
 
-    query = mydb.session.query(App)
+    query = mydb.session.query(App).filter_by(hide = False)
 
     searchQuery = args.get('query')
     if searchQuery:
         query = sqlalchemy_searchable.search(query, searchQuery)
     
     sortBy = args.get('sort_by', 'title')
-    if bool(args.get('sort_dir', False)):
-        searchCol = getattr(App, sortBy).asc()
-    else:
-        searchCol = getattr(App, sortBy).desc()
+    if sortBy == 'title':
+      query = query.order_by(App.title.asc())
+    elif sortBy == 'author':
+      query = query.order_by(App.author.asc())
+    elif sortBy == 'downloads':
+        query = query.order_by(App.downloads.desc())
+    elif sortBy == 'stars':
+        query = query.order_by(App.stars.desc())
+
+    # if bool(args.get('sort_dir', False)):
+    #     searchCol = getattr(App, sortBy).asc()
+    # else:
+    #     searchCol = getattr(App, sortBy).desc()
     
-    query = query.order_by(searchCol)
+    # query = query.order_by(searchCol)
 
     apps = mydb.paginate(query,
         page = int(args.get('page', 1)),
@@ -76,10 +85,13 @@ def apps_update():
 def build_app(git_user, git_repo):
     app = App.query.filter_by(title=git_repo, author=git_user).first()
 
-    if app:
-        return do_build_app(app=app)
-    else:
-        return do_build_app(title=git_repo, author=git_user)
+    try:
+        if app:
+            return do_build_app(app=app)
+        else:
+            return do_build_app(title=git_repo, author=git_user)
+    except:
+        return redirect("/index.html?message=Build failed", code=302)
 
 init_app_db(api)
 

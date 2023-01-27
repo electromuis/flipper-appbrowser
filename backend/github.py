@@ -4,6 +4,7 @@ import urllib, logging, sys, json, base64, re, os, time
 log = logging.getLogger(__name__)
 
 git_token = os.getenv('GIT_TOKEN')
+
 if git_token:
     git_client = Octokit(auth='token', token=git_token)
 else:
@@ -75,9 +76,18 @@ def read_readme(app):
         except:
             return None
 
-def get_last_commit(app):
-    log.debug(dir(git_client.repos))
+def get_repo_files(app):
+    data = git_client.git.get_tree(
+        owner=app.author,
+        repo=app.title,
+        tree_sha=app.last_commit,
+        recursive=True
+    )
 
+    return data.json
+    
+
+def get_last_commit(app):
     data = git_client.repos.list_commits(
         owner=app.author,
         repo=app.title

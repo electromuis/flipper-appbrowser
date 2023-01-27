@@ -13,7 +13,7 @@ def search_task():
     if last_request and len(last_request.get_items()) > 0:
         page = last_request.page + 1
 
-    query = "filename:\"application.fam\" path:/"
+    query = "filename:\"application.fam\" \"App(\" in:file"
     next_request = SearchRequest(
         page = page,
         query = query,
@@ -48,5 +48,9 @@ def save_apps(search_response):
             new = new + 1
         row.search_json = a
         mydb.session.commit()
+        row.update_hide()
+        mydb.session.commit()
+
+    log.debug("Found {}, new {}".format(len(items), new))
 
     return len(items), new

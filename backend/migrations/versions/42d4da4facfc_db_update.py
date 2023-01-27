@@ -1,17 +1,18 @@
 """DB update
 
-Revision ID: 080b7937740b
+Revision ID: 42d4da4facfb
 Revises: 4640a6467a55
-Create Date: 2023-01-26 20:49:23.092749
+Create Date: 2023-01-27 14:42:10.218449
 
 """
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy_searchable import sync_trigger
 from sqlalchemy_utils.types import TSVectorType
 
 # revision identifiers, used by Alembic.
-revision = '080b7937740b'
+revision = '42d4da4facfb'
 down_revision = '4640a6467a55'
 branch_labels = None
 depends_on = None
@@ -40,7 +41,10 @@ def upgrade():
     sa.PrimaryKeyConstraint('ID')
     )
     with op.batch_alter_table('apps', schema=None) as batch_op:
+        batch_op.add_column(sa.Column('hide', sa.Boolean(), nullable=True))
+        batch_op.add_column(sa.Column('repo_root', sa.String(length=255), nullable=True))
         batch_op.add_column(sa.Column('last_commit', sa.String(length=64), nullable=True))
+        batch_op.add_column(sa.Column('files_json', postgresql.JSONB(astext_type=sa.Text()), nullable=True))
         batch_op.add_column(sa.Column('search_vector', TSVectorType(), nullable=True))
         batch_op.alter_column('title',
                existing_type=sa.VARCHAR(length=32),
@@ -58,6 +62,13 @@ def upgrade():
                existing_type=postgresql.TIMESTAMP(),
                nullable=False)
 
+    conn = op.get_bind()
+    sync_trigger(
+              conn,
+              'apps',
+              'search_vector',
+              ['title', 'author', 'category', 'readme']
+    )
     # ### end Alembic commands ###
 
 
@@ -80,7 +91,10 @@ def downgrade():
                type_=sa.VARCHAR(length=32),
                existing_nullable=False)
         batch_op.drop_column('search_vector')
+        batch_op.drop_column('files_json')
         batch_op.drop_column('last_commit')
+        batch_op.drop_column('repo_root')
+        batch_op.drop_column('hide')
 
     op.drop_table('requests_search')
     op.drop_table('build_tasks')

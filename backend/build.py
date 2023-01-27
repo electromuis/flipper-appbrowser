@@ -24,21 +24,29 @@ def do_build_app(app=None, title=None, author=None):
         
         os.system("git clone {} {}".format(url, tmpdirname))
         
-        build_row.git_hash = check_output(['git', 'rev-parse', 'HEAD'], cwd=tmpdirname).decode('UTF-8')
+        build_row.git_hash = check_output(['git', 'rev-parse', 'HEAD'], cwd=tmpdirname).decode('UTF-8').strip()
         mydb.session.add(build_row)
         mydb.session.commit()
 
+        try:
+            # Build the app
+            output = check_output([ufbt], cwd=tmpdirname).decode('UTF-8')
+            
+        except Exception as e:
+            log.debug(e)
 
-        # Build the app
-        output = check_output([ufbt], cwd=tmpdirname).decode('UTF-8')
-        build_row.output = output
+            build_row.output = e.output.decode('UTF-8')
+            build_row.success = False
+            mydb.session.commit()
+
+            raise Exception("Building fap failed (1)")
 
         files = glob.glob(tmpdirname + "/dist/*.fap")
         if len(files) != 1:
             build_row.success = False
             mydb.session.commit()
 
-            raise Exception("Building fap failed")
+            raise Exception("Building fap failed (2)")
 
         build_row.success = True
         mydb.session.commit()

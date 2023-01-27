@@ -14,12 +14,11 @@ from sqlalchemy_utils.types import TSVectorType
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from github import read_app_fam, read_repo_info, read_readme, get_last_commit
+from github import read_app_fam, read_repo_info, read_readme, get_last_commit, get_repo_files
 
 log = logging.getLogger(__name__)
 
 mydb = SQLAlchemy()
-make_searchable(mydb.Model.metadata)
 
 class BuildTask(mydb.Model):
     __tablename__ = 'build_tasks'
@@ -69,11 +68,15 @@ class App(mydb.Model):
     stars=Column(Integer())
     readme=Column(Text())
 
+    hide=Column(Boolean(), default=False)
+    repo_root=Column(String(255))
     last_commit=Column(String(64))
+
     downloads=Column(Integer(), nullable=False)
     created_at=Column(DateTime(), nullable=False, default=func.now())
     updated_at=Column(DateTime())
 
+    files_json=Column(MutableDict.as_mutable(JSONB))
     search_json=Column(MutableDict.as_mutable(JSONB))
     repo_json=Column(MutableDict.as_mutable(JSONB))
     fam_json=Column(MutableDict.as_mutable(JSONB))
@@ -84,6 +87,21 @@ class App(mydb.Model):
         self.title = title
         self.author = author
         self.downloads = 0
+
+    def update_hide(self):
+        if self.hide:
+            return
+
+        self.last_commit = get_last_commit(self)
+        self.files_json = get_repo_files(self)
+        app_files = list([f for f in self.files_json['tree'] if f['path'].endswith('application.fam')])
+        log.debug(app_files)
+
+        if len(app_files) != 1:
+            self.hide = True
+
+        self.repo_root = app_files[0]['path'].replace('/application.fam', '')
+
 
     def update_data(self):
         self.repo_json = read_repo_info(self)
@@ -105,12 +123,26 @@ class App(mydb.Model):
                 self.fam_json.get('fap_icon')
             )
 
+        build = None
+        build_task = mydb.session.query(BuildTask).filter_by(
+            app_title = self.title,
+            app_author = self.author,
+            git_hash = self.last_commit
+        ).first()
+
+        log.debug(self.last_commit)
+
+        if build_task:
+            build = build_task.success
+
         return {
             'url': 'https://github.com/{}/{}'.format(self.author, self.title),
             'downloads': self.downloads,
+            'building': build,
             
             'title': self.title,
             'author': self.author,
+            'main_branch': self.repo_json.get('default_branch'),
             
             'readme': self.readme,
             'updated_at': self.repo_json.get('pushed_at'),
@@ -118,9 +150,14 @@ class App(mydb.Model):
             'author_icon': self.repo_json['owner']['avatar_url'],
             'description': self.repo_json.get('description'),
             'stars': self.repo_json.get('stargazers_count'),
+            'issues': self.repo_json.get('open_issues'),
+            'subs': self.repo_json.get('subscribers_count'),
             'category': self.fam_json.get('fap_category'),
             'icon': icon
         }
+
+
+make_searchable(mydb.Model.metadata)
 
 # meta.create_all(engine)
 def init_app_db(app):

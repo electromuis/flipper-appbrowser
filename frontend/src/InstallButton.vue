@@ -1,10 +1,14 @@
 <template>
     <b-button v-if="status" :variant="disabled" disabled>{{ status }}</b-button>
-    <b-button v-else @click="install()">Install</b-button>
+    <b-button v-else @click="install()">
+        Install
+
+        <font-awesome-icon :icon="['fas', 'microchip']" />
+    </b-button>
 </template>
 
 <script>
-import * as flipper from './../lab.flipper.net/frontend/src/flipper/core'
+import * as flipper from './flipper/core'
 import { ref } from 'vue'
 import asyncSleep from 'simple-async-sleep'
 
@@ -29,9 +33,11 @@ export default {
             try {
                 this.status = 'Building'
 
-                const response = await fetch(`/build/${app.author}/${app.title}`)
+                const response = await fetch(`/build/${app.author}/${app.title}`, {redirect: 'manual'})
+                
                 if(response.status != 200) {
-                    throw new Error('Build failed')
+                    this.status = 'Build failed'
+                    return
                 }
                 const header = response.headers.get('Content-Disposition');
                 const parts = header.split(';');
@@ -39,7 +45,12 @@ export default {
                 const filedata = await response.arrayBuffer()
 
                 this.status = 'Connecting to flipper'
-                this.flipper.connect()
+                try {
+                    this.flipper.connect()
+                } catch(e) {
+                    this.status = 'Connecting failed'
+                    return
+                }
                 
                 const ping = await this.flipper.commands.startRpcSession(this.flipper)
                 if (!ping.resolved || ping.error) {
@@ -62,10 +73,10 @@ export default {
                 this.status = 'Disconnecting'
                 this.flipper.closeReader()
                 await asyncSleep(300)
+                this.status = null
 
             } finally {
                 this.flipper.disconnect()
-                this.status = null
             }
         }
     }
