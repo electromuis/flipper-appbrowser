@@ -18,7 +18,7 @@ def find_apps():
         search_response = git_client.search.code(
             page=page,
             per_page=100,
-            q="filename:\"application.fam\" path:/"
+            q="in:path filename:application.fam extension:fam"
         )
         page = page + 1
 
